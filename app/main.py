@@ -6,6 +6,7 @@ All endpoints, business rules (R1-R10), validations, and aggregation pipelines
 are self-contained in this file.
 """
 import calendar
+import json
 import math
 import os
 import re
@@ -13,6 +14,7 @@ from datetime import date, datetime, time, timedelta, timezone
 from decimal import Decimal, ROUND_HALF_UP
 from typing import Any, Dict, List, Literal, Optional, Union
 
+from bson import json_util
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Path, Query, status
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -1158,7 +1160,11 @@ def explain_endpoint(
             },
             verbosity="executionStats",
         )
-        return {"endpoint": endpoint, "collection": "attendance_logs", "explain": explain}
+        return {
+            "endpoint": endpoint,
+            "collection": "attendance_logs",
+            "explain": json.loads(json_util.dumps(explain)),
+        }
 
     elif endpoint == "employee_monthly":
         if not emp_code or not month:
@@ -1175,7 +1181,11 @@ def explain_endpoint(
             },
             verbosity="executionStats",
         )
-        return {"endpoint": endpoint, "collection": "attendance_logs", "explain": explain}
+        return {
+            "endpoint": endpoint,
+            "collection": "attendance_logs",
+            "explain": json.loads(json_util.dumps(explain)),
+        }
 
     elif endpoint == "department_summary":
         if not month:
@@ -1193,7 +1203,11 @@ def explain_endpoint(
             },
             verbosity="executionStats",
         )
-        return {"endpoint": endpoint, "collection": "employees", "explain": explain}
+        return {
+            "endpoint": endpoint,
+            "collection": "employees",
+            "explain": json.loads(json_util.dumps(explain)),
+        }
 
     elif endpoint == "late_leaderboard":
         if not month:
@@ -1210,7 +1224,11 @@ def explain_endpoint(
             },
             verbosity="executionStats",
         )
-        return {"endpoint": endpoint, "collection": "attendance_logs", "explain": explain}
+        return {
+            "endpoint": endpoint,
+            "collection": "attendance_logs",
+            "explain": json.loads(json_util.dumps(explain)),
+        }
 
     elif endpoint == "department_trend":
         if not department or not from_date or not to_date:
@@ -1242,6 +1260,10 @@ def explain_endpoint(
             },
             verbosity="executionStats",
         )
-        return {"endpoint": endpoint, "collection": "employees", "explain": explain}
+        return {
+            "endpoint": endpoint,
+            "collection": "employees",
+            "explain": json.loads(json_util.dumps(explain)),
+        }
 
     raise HTTPException(status_code=422, detail="Invalid endpoint")
